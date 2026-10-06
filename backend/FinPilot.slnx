@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/FinPilot.Api/FinPilot.Api.csproj" />
+    <Project Path="src/FinPilot.Engine/FinPilot.Engine.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/FinPilot.Engine.Tests/FinPilot.Engine.Tests.csproj" />
+  </Folder>
+</Solution>

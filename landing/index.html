@@ -243,7 +243,7 @@ input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 4px rgba(214,
 
 /* cockpit: instrument plates printed on chart paper */
 .cockpit{padding:clamp(20px,3vw,40px) var(--gut)}
-.deck{position:relative;margin:0 auto;max-width:calc(var(--wrap) + 160px);border-radius:clamp(26px,4vw,44px);padding:clamp(56px,8vw,104px) 0;color:var(--ink);overflow:hidden;
+.deck{position:relative;margin:0 auto;max-width:calc(var(--wrap) + 160px);border-radius:clamp(26px,4vw,44px);padding:clamp(56px,8vw,104px) 0;color:var(--ink);overflow:hidden;overflow:clip;
   background:linear-gradient(rgba(31,95,168,.07) 1px,transparent 1px) 0 0/24px 24px,linear-gradient(90deg,rgba(31,95,168,.07) 1px,transparent 1px) 0 0/24px 24px,linear-gradient(180deg,var(--paper-2),#E4DCC8);box-shadow:inset 0 0 0 1px rgba(16,27,51,.08),inset 0 2px 0 rgba(255,255,255,.5)}
 .deck::before{content:"";position:absolute;inset:14px;border:1px solid rgba(31,95,168,.22);border-radius:clamp(16px,3vw,32px);pointer-events:none}
 .deck>.wrap{position:relative}
@@ -262,7 +262,7 @@ input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 4px rgba(214,
 .switch input:checked+.tr::after{transform:translateX(20px)}
 .switch input:focus-visible+.tr{outline:3px solid var(--magenta-2);outline-offset:3px}
 
-/* 56-day calendar: tide grid + day block */
+/* 56-day calendar: week strips + day block */
 .cal-top{display:grid;gap:28px 56px;margin-bottom:clamp(30px,4.4vw,52px)}
 @media (min-width:960px){.cal-top{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:end}}
 .cal-body{display:grid;gap:clamp(44px,5vw,56px)}
@@ -278,70 +278,75 @@ input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 4px rgba(214,
 .cal-sum dd.sub{margin-top:6px;font:500 .66rem/1.3 var(--f-mono);letter-spacing:0;color:var(--ink-3);white-space:normal}
 .cal-sum dd.warn{color:var(--amber)}.cal-sum dd.neg{color:var(--red)}
 
-.cal{--rs:.107;width:100%;margin-top:18px;border-collapse:separate;border-spacing:0;table-layout:fixed}
-.cal thead th{padding:0 0 8px 8px;text-align:left;font:600 .6rem/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
-.cal thead th.we{color:var(--magenta)}
-.cal .rh{width:24px;padding:0}
-.cal tbody th{padding:0;vertical-align:middle;font:600 .54rem/1 var(--f-mono);letter-spacing:.14em;color:var(--ink-3)}
-.cal tbody th span{display:block;writing-mode:vertical-rl;transform:rotate(180deg);margin:0 auto}
-.cal td{position:relative;height:clamp(50px,8vw,76px);padding:0;border-top:1px solid var(--rule);border-left:1px solid var(--rule);overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.cal td:last-child{border-right:1px solid var(--rule)}
-.cal tr:last-child td{border-bottom:1px solid var(--rule)}
-.cal td.we{background:rgba(176,36,108,.04)}
-.cal td.mt{border-top:2px solid var(--ink)}
-.cal td.ml{border-left:2px solid var(--ink)}
-.cal td::before{content:"";position:absolute;left:0;right:0;z-index:1;pointer-events:none}
-.cal td::before{bottom:calc(var(--rs) * 100%);border-top:1.5px dashed rgba(184,110,10,.62)}
-.cal td:focus-visible{outline:3px solid var(--magenta-2);outline-offset:-3px;border-radius:0}
-.cal .lvl,.cal .wl{position:absolute;left:0;right:0;pointer-events:none;transition:transform .9s var(--ease) calc(var(--i) * 12ms),opacity .3s}
-.cal .lvl,.cal .wl{bottom:0;height:100%}
-.cal .lvl{transform-origin:50% 100%;transform:scaleY(0);background:linear-gradient(180deg,rgba(31,95,168,.34),rgba(31,95,168,.12))}
-.cal .wl{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='5'%3E%3Cpath d='M0 3Q3.5 .4 7 3T14 3' fill='none' stroke='%231F5FA8' stroke-width='1.7'/%3E%3C/svg%3E") 0 -1px/14px 5px repeat-x;transform:translateY(100%)}
-.cal td.tight .lvl{background:linear-gradient(180deg,rgba(184,110,10,.36),rgba(184,110,10,.12))}
-.cal td.tight .wl{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='5'%3E%3Cpath d='M0 3Q3.5 .4 7 3T14 3' fill='none' stroke='%23B86E0A' stroke-width='1.7'/%3E%3C/svg%3E") 0 -1px/14px 5px repeat-x}
-.cal td.neg{background:repeating-linear-gradient(-45deg,rgba(195,50,43,.2) 0 2px,rgba(195,50,43,.04) 2px 7px)}
-.cal td.neg .wl{background:none}
-.cal .fr{position:absolute;inset:0;z-index:3;pointer-events:none;transition:box-shadow .2s}
-.cal td:hover .fr{box-shadow:inset 0 0 0 1.5px rgba(16,27,51,.35)}
-.cal td[aria-selected="true"] .fr{box-shadow:inset 0 0 0 2.5px var(--ink)}
-.cal .dn{position:absolute;left:clamp(6px,.9vw,9px);top:clamp(5px,.7vw,8px);z-index:2;display:flex;align-items:baseline;gap:4px;font:600 clamp(.8rem,1.5vw,1.16rem)/1 var(--f-display);font-variant-numeric:tabular-nums}
-.cal .dn b{font-weight:inherit}
-.cal .mo{font:700 .5rem/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--magenta)}
-.cal .ring{position:absolute;max-width:none;left:-.45em;top:-.32em;width:2.05em;height:1.65em;overflow:visible;pointer-events:none}
-.cal .ring path{fill:none;stroke:var(--magenta);stroke-width:2.4;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .7s var(--ease) .45s}
-.cal td.sh .ring path{stroke:var(--red)}
-.cal td.lo .ring path,.cal td.sh .ring path{stroke-dashoffset:0}
-.cal .fl{position:absolute;right:6px;top:8px;z-index:2;font:700 .5rem/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
-.cal td.lo .fl{color:var(--magenta)}.cal td.sh .fl{color:var(--red)}
-.cal .tg{position:absolute;left:clamp(6px,.9vw,9px);top:clamp(23px,2.7vw,29px);z-index:2;max-width:calc(100% - 12px);font:italic 400 clamp(.72rem,1.1vw,.82rem)/1.15 var(--f-serif);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink-2);text-shadow:0 0 3px #FFFDF6,0 0 2px #FFFDF6}
-.cal .tg.in{color:var(--jade)}
-.cal .bv{position:absolute;right:5px;top:-13px;font:600 .58rem/1 var(--f-mono);font-variant-numeric:tabular-nums;color:var(--ink-3)}
-.cal td.neg .bv{color:var(--red)}
-.cal td.hi .bv{top:4px}
-.cal .tg:empty{display:none}
-.cal .dot{display:none;position:absolute;right:5px;top:6px;z-index:2;width:6px;height:6px;border-radius:50%;background:var(--ink-2)}
-.cal .dot.in{background:var(--jade)}
-.cal .dot.no{visibility:hidden}
-.cal-note{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px;margin:16px 0 0;font:italic 400 clamp(.94rem,1.4vw,1.04rem)/1.45 var(--f-serif);color:var(--ink-2)}
+.cal{margin-top:20px}
+.cal__row{display:grid;grid-template-columns:24px repeat(7,minmax(0,1fr))}
+.cal__hd>span{padding:0 0 10px clamp(6px,1vw,11px);font:600 .6rem/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.cal__hd>.we{color:var(--magenta)}
+.cal__hd>.rh{padding:0}
+.cal__wk{position:relative;border-top:1px solid var(--rule)}
+.cal__wk:last-of-type{border-bottom:1px solid var(--rule)}
+.cal__wk>.rh{display:flex;align-items:center;justify-content:center;font:600 .54rem/1 var(--f-mono);letter-spacing:.14em;color:var(--ink-3)}
+.cal__wk>.rh span{writing-mode:vertical-rl;transform:rotate(180deg)}
+.day{position:relative;height:clamp(60px,8.6vw,98px);border-left:1px solid var(--rule-2);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background-color .25s}
+.day:last-of-type{border-right:1px solid var(--rule-2)}
+.day.we{background-color:rgba(176,36,108,.035)}
+.day.neg{background-color:rgba(195,50,43,.055)}
+.day:hover{background-color:rgba(16,27,51,.04)}
+.day.ml{border-left:2px solid var(--ink)}
+.day.mt::before{content:"";position:absolute;left:-1px;right:0;top:-1px;height:2px;background:var(--ink)}
+.day:focus-visible{outline:3px solid var(--magenta-2);outline-offset:-3px;border-radius:3px}
+.day .dn{position:absolute;left:clamp(4px,.8vw,9px);top:clamp(4px,.6vw,7px);z-index:2;display:flex;align-items:center;gap:3px;font:500 clamp(.84rem,1.5vw,1.2rem)/1 var(--f-display);font-variant-numeric:tabular-nums;color:var(--ink)}
+.day .dn b{position:relative;display:grid;place-items:center;min-width:1.75em;height:1.75em;border-radius:50%;font-weight:inherit;transition:background-color .25s,color .25s}
+.day.we .dn b{color:var(--magenta)}
+.day.neg .dn b{color:var(--red)}
+.day[aria-current="date"] .dn b{box-shadow:inset 0 0 0 1.5px currentColor}
+.day[aria-selected="true"] .dn b{background:var(--ink);color:#FFFDF6;box-shadow:none}
+.day.flagged .mo{display:none}
+.day .mo{font:700 .5rem/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--magenta)}
+.day .ring{position:absolute;left:-.32em;top:-.3em;width:2.4em;height:2.3em;max-width:none;overflow:visible;pointer-events:none}
+.day .ring path{fill:none;stroke:var(--magenta);stroke-width:2.4;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .7s var(--ease) .4s}
+.day.sh .ring path{stroke:var(--red)}
+.day.lo .ring path,.day.sh .ring path{stroke-dashoffset:0}
+.day .fl{position:absolute;right:clamp(4px,.7vw,8px);top:clamp(8px,1vw,12px);z-index:2;padding:3px 5px 2px;border:1px solid currentColor;border-radius:3px;font:700 .48rem/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.day .fl:empty,.day .ev:empty{display:none}
+.day.lo .fl{border-color:var(--magenta);background:var(--magenta);color:#fff}
+.day.sh .fl{border-color:var(--red);background:var(--red);color:#fff}
+.day .ev{position:absolute;left:clamp(5px,.8vw,9px);top:clamp(34px,3.7vw,42px);z-index:2;max-width:calc(100% - 12px);padding:3px 6px 2px;border-radius:4px;background:rgba(16,27,51,.07);font:600 .55rem/1.2 var(--f-mono);font-variant-numeric:tabular-nums;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.day .ev.in{background:rgba(31,122,87,.11);color:var(--jade)}
+.day .dot{display:none;position:absolute;right:4px;top:5px;z-index:2;width:5px;height:5px;border-radius:50%;background:var(--ink-2)}
+.day .dot.in{background:var(--jade)}
+.day .dot.no{visibility:hidden}
+.day .pt{position:absolute;left:50%;bottom:calc(var(--band) * (1 - var(--y,.5)));z-index:3;width:9px;height:9px;margin:0 0 -4.5px -4.5px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 2px #FFFDF6;opacity:0;transform:scale(.4);transition:opacity .2s,transform .3s var(--spring);pointer-events:none}
+.day:hover .pt,.day[aria-selected="true"] .pt{opacity:1;transform:none}
+.day .pv{position:absolute;left:50%;bottom:13px;padding:3px 5px 2px;border-radius:3px;background:var(--ink);color:#FFFDF6;font:600 .56rem/1 var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap;transform:translateX(-50%)}
+.cal__wk{--band:42%}
+.spark{position:absolute;left:24px;bottom:0;z-index:1;width:calc(100% - 24px);height:var(--band);max-width:none;overflow:visible;pointer-events:none}
+.sp-line{fill:none;stroke:url(#cal-ink);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.sp-area{fill:url(#cal-fill)}
+.sp-res{stroke:var(--amber);stroke-width:1;stroke-dasharray:4 4;opacity:.65;vector-effect:non-scaling-stroke}
+.sp-zero{stroke:var(--ink);stroke-width:1;opacity:.22;vector-effect:non-scaling-stroke}
+.cal-note{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px;margin:18px 0 0;font:italic 400 clamp(.94rem,1.4vw,1.04rem)/1.45 var(--f-serif);color:var(--ink-2)}
 .pill{flex:none;padding:5px 9px 4px;border-radius:999px;background:var(--jade);color:#fff;font:700 .58rem/1 var(--f-mono);font-style:normal;letter-spacing:.14em;text-transform:uppercase;transition:background .3s}
 .pill.tight{background:var(--amber)}.pill.short{background:var(--red)}
 .cal-key{display:flex;flex-wrap:wrap;gap:8px 18px;list-style:none;margin:16px 0 0;padding:14px 0 0;border-top:1px solid var(--rule-2);font:500 .64rem/1.2 var(--f-mono);color:var(--ink-3)}
 .cal-key li{display:inline-flex;align-items:center;gap:7px}
 .cal-key i{flex:none;width:18px;height:12px}
-.cal-key .k-lvl{border-top:2px solid var(--blue);background:linear-gradient(180deg,rgba(31,95,168,.3),rgba(31,95,168,.1))}
+.cal-key .k-line{height:0;border-top:2.5px solid var(--blue);border-radius:2px}
 .cal-key .k-res{height:0;border-top:1.5px dashed var(--amber)}
-.cal-key .k-def{background:repeating-linear-gradient(-45deg,rgba(195,50,43,.5) 0 2px,rgba(195,50,43,.12) 2px 6px)}
+.cal-key .k-def{border-top:2.5px solid var(--red);background:linear-gradient(180deg,rgba(195,50,43,.12),rgba(195,50,43,.36))}
 .cal-key .k-lo,.cal-key .k-sh{border:2px solid var(--magenta);border-radius:50%}
 .cal-key .k-sh{border-color:var(--red)}
 @media (min-width:1020px){.cal-key .k-unit{margin-left:auto}}
-@media (max-width:759px){.cal .bv{display:none}}
 @media (max-width:639px){
-  .cal .rh,.cal tbody th,.cal .tg,.cal .fl{display:none}
-  .cal thead th{padding-left:5px;letter-spacing:.06em}
-  .cal .dot{display:block}
+  .cal__row{grid-template-columns:repeat(7,minmax(0,1fr))}
+  .cal .rh,.day .ev,.day .fl,.day .pv,.day .mo{display:none}
+  .cal__hd>span{padding-left:4px;letter-spacing:.06em}
+  .spark{left:0;width:100%}
+  .day .dot{display:block}
 }
 
 .bloc-wrap{display:flex;justify-content:center;padding-top:30px}
+@media (min-width:1020px){.bloc-wrap{position:sticky;top:clamp(84px,11vh,120px)}}
 .bloc{position:relative;width:min(100%,320px);padding:14px 14px 16px;border-radius:16px 16px 8px 8px;background:radial-gradient(120% 70% at 30% 0%,#B4316F,#7C1549 72%);box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 40px 60px -36px rgba(16,27,51,.75),0 3px 8px rgba(16,27,51,.25);transform:rotate(1.2deg);transform-origin:50% -20px}
 .bloc::before{content:"";position:absolute;z-index:1;left:calc(50% - 7px);top:-27px;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#F1ECE2,#8E877A);box-shadow:0 3px 4px rgba(16,27,51,.35)}
 .bloc::after{content:"";position:absolute;left:24%;right:24%;top:-20px;height:21px;background:linear-gradient(to bottom right,transparent calc(50% - 1px),#6B5A48 calc(50% - .5px),#6B5A48 calc(50% + .5px),transparent calc(50% + 1px)) left/50% 100% no-repeat,linear-gradient(to bottom left,transparent calc(50% - 1px),#6B5A48 calc(50% - .5px),#6B5A48 calc(50% + .5px),transparent calc(50% + 1px)) right/50% 100% no-repeat}
@@ -386,34 +391,6 @@ input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 4px rgba(214,
 .leaf.fresh2 .leaf__close b,.leaf.fresh2 .leaf__note{animation:fresh2 .6s var(--ease)}
 @keyframes fresh{from{opacity:.15}}@keyframes fresh2{from{opacity:.15}}
 .bloc__edge{height:18px;margin:0 2px;border-radius:0 0 4px 4px;background:repeating-linear-gradient(180deg,#FFFDF6 0 2px,#D9D0BC 2px 3px);box-shadow:0 2px 0 rgba(16,27,51,.14);transform-origin:50% 0;transition:transform .6s var(--ease)}
-
-/* boarding passes */
-.pass-head{display:grid;gap:16px;margin-bottom:clamp(34px,5vw,60px);max-width:760px}
-.passes{display:grid;gap:clamp(20px,3vw,34px)}
-@media (min-width:860px){.passes{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.passes .pass:nth-child(even){margin-top:56px}}
-.pass{--pc:var(--magenta);position:relative;display:grid;grid-template-columns:minmax(0,1fr) clamp(74px,22%,124px);background:var(--card);border-radius:20px;box-shadow:var(--shadow);transition:transform .6s var(--spring),box-shadow .4s}
-.pass:hover{transform:translateY(-5px) rotate(-.5deg)}
-.pass:nth-child(2){--pc:var(--blue)}.pass:nth-child(3){--pc:var(--jade)}.pass:nth-child(4){--pc:#C25A1E}
-.pass__main{position:relative;padding:22px clamp(16px,2.6vw,28px) 22px;border-radius:20px 0 0 20px;overflow:hidden;min-width:0}
-.pass__main::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--pc)}
-.pass__top{display:flex;justify-content:space-between;align-items:center;gap:10px;font:700 .64rem/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
-.pass__top span:last-child{color:var(--pc)}
-.pass h3{margin:14px 0 14px;font:700 clamp(1.35rem,2.6vw,1.75rem)/1.05 var(--f-display);font-stretch:88%;letter-spacing:-.01em}
-.route{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px;align-items:center;padding:12px 0;border-block:1px dashed var(--rule)}
-.route small{display:block;font:600 .6rem/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
-.route strong{display:block;font:700 clamp(.76rem,2.4vw,1.04rem)/1.2 var(--f-mono)}
-.route .to{text-align:right}
-.route svg{width:clamp(28px,6vw,46px);height:18px;color:var(--pc)}
-.pass p{margin:14px 0 0;font-size:.95rem;color:var(--ink-2)}
-.pass__stub{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:10px;padding:18px 10px;border-left:2px dashed var(--paper-3);border-radius:0 20px 20px 0;background:linear-gradient(180deg,var(--card),#F6F1E6);transition:transform .7s var(--spring),opacity .5s;transform-origin:0 100%}
-.pass__stub::before,.pass__stub::after{content:"";position:absolute;left:-12px;width:22px;height:22px;border-radius:50%;background:var(--paper)}
-.pass__stub::before{top:-11px}.pass__stub::after{bottom:-11px}
-.seat{text-align:center;font:600 .58rem/1 var(--f-mono);letter-spacing:.16em;color:var(--ink-3)}
-.seat b{display:block;margin-top:5px;font:700 1.5rem/1 var(--f-display);letter-spacing:0;color:var(--ink)}
-.bc{width:100%;height:56px;color:var(--ink)}
-.tear{min-height:32px;padding:0 10px;border-radius:999px;border:1.5px solid var(--rule);background:transparent;font:700 .6rem/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);transition:border-color .2s,background .2s}
-.tear:hover{border-color:var(--pc);background:color-mix(in srgb,var(--pc) 8%,transparent)}
-.pass.torn .pass__stub{transform:translate(26px,18px) rotate(10deg);opacity:.2}
 
 /* fares */
 .fares-head{display:flex;justify-content:space-between;align-items:end;gap:22px 32px;flex-wrap:wrap;margin-bottom:clamp(30px,4vw,44px)}
@@ -545,7 +522,6 @@ input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 4px rgba(214,
         <li><a href="#board">Departures</a></li>
         <li><a href="#checklist">How it works</a></li>
         <li><a href="#calendar">Calendar</a></li>
-        <li><a href="#principles">Principles</a></li>
         <li><a href="#pricing">Pricing</a></li>
         <li><a href="#faq">FAQ</a></li>
       </ul>
@@ -698,7 +674,7 @@ input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 4px rgba(214,
         <div data-reveal>
           <p class="eyebrow">56-day calendar</p>
           <h2 class="h2" id="cal-title">Eight weeks, <em>one page</em>.</h2>
-          <p class="lede">Every square is a day, filled to the cash you close it with. Pick an order size and watch the tide roll through the weeks. Pick a day to flip the block to it.</p>
+          <p class="lede">Each week is one strip of the forecast line. Scroll through the weeks and the day block turns its pages with you, or pick any day to jump straight to it.</p>
         </div>
         <div class="deck-ctl" data-reveal data-d="1">
           <span class="lab" id="chip-lab">Restock order</span>
@@ -721,13 +697,12 @@ input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 4px rgba(214,
             <div><dt>Runway</dt><dd id="cs-run">—</dd><dd class="sub" id="cs-run-s"></dd></div>
             <div><dt>Payroll</dt><dd id="cs-pay">—</dd><dd class="sub">worst of 2 runs</dd></div>
           </dl>
-          <table class="cal" id="cal" role="grid" aria-labelledby="cal-cap" aria-describedby="cal-help">
-            <caption id="cal-cap" class="sr-only">Closing cash for each of the next 56 days</caption>
-          </table>
-          <p class="sr-only" id="cal-help">Use the arrow keys to move between days. The day block beside the calendar shows the selected day.</p>
+          <p id="cal-cap" class="sr-only">Closing cash for each of the next 56 days</p>
+          <div class="cal" id="cal" role="grid" aria-labelledby="cal-cap" aria-describedby="cal-help"></div>
+          <p class="sr-only" id="cal-help">Use the arrow keys to move between days. The day block shows the selected day.</p>
           <p class="cal-note" aria-live="polite"><b class="pill" id="cal-pill"></b> <span id="cal-rmk"></span></p>
           <ul class="cal-key" aria-label="How to read the calendar">
-            <li><i class="k-lvl" aria-hidden="true"></i>Closing balance</li>
+            <li><i class="k-line" aria-hidden="true"></i>Closing balance</li>
             <li><i class="k-res" aria-hidden="true"></i>₫15M reserve</li>
             <li><i class="k-def" aria-hidden="true"></i>Below zero</li>
             <li><i class="k-lo" aria-hidden="true"></i>Lowest day</li>
@@ -750,54 +725,6 @@ input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 4px rgba(214,
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-
-<section class="sec" id="principles" aria-labelledby="pr-title">
-  <div class="wrap">
-    <div class="pass-head" data-reveal>
-      <p class="eyebrow">Principles</p>
-      <h2 class="h2" id="pr-title">Built on <em>honest</em> numbers.</h2>
-      <p class="lede">A forecast is only as good as what it refuses to fudge. Four rules FinPilot never breaks — printed as passes, because they travel with every number.</p>
-    </div>
-    <div class="passes">
-      <article class="pass" data-reveal>
-        <div class="pass__main">
-          <div class="pass__top"><span>Boarding pass</span><span>Rule 01</span></div>
-          <h3>Confirmed cash only</h3>
-          <div class="route"><div><small>From</small><strong>Bank balance</strong></div><svg aria-hidden="true"><use href="#i-dash"/></svg><div class="to"><small>To</small><strong>Day 0</strong></div></div>
-          <p>The forecast starts from cash you’ve confirmed, never from payouts you’re hoping for. It doesn’t borrow from tomorrow to look good today.</p>
-        </div>
-        <div class="pass__stub"><div class="seat">SEAT<b>01A</b></div><svg class="bc" data-code="CONFIRMED-CASH" viewBox="0 0 80 56" preserveAspectRatio="none" aria-hidden="true"></svg><button class="tear" type="button" aria-label="Tear the stub of rule 01">Tear</button></div>
-      </article>
-      <article class="pass" data-reveal data-d="1">
-        <div class="pass__main">
-          <div class="pass__top"><span>Boarding pass</span><span>Rule 02</span></div>
-          <h3>Every đồng, exactly</h3>
-          <div class="route"><div><small>From</small><strong>₫50,000,001</strong></div><svg aria-hidden="true"><use href="#i-dash"/></svg><div class="to"><small>To</small><strong>₫50,000,001</strong></div></div>
-          <p>Whole-đồng integers from your keyboard to the database and back. Nothing rounded, nothing lost to floating-point drift.</p>
-        </div>
-        <div class="pass__stub"><div class="seat">SEAT<b>02C</b></div><svg class="bc" data-code="EVERY-DONG" viewBox="0 0 80 56" preserveAspectRatio="none" aria-hidden="true"></svg><button class="tear" type="button" aria-label="Tear the stub of rule 02">Tear</button></div>
-      </article>
-      <article class="pass" data-reveal>
-        <div class="pass__main">
-          <div class="pass__top"><span>Boarding pass</span><span>Rule 03</span></div>
-          <h3>Fifty-six days ahead</h3>
-          <div class="route"><div><small>From</small><strong>Today</strong></div><svg aria-hidden="true"><use href="#i-dash"/></svg><div class="to"><small>To</small><strong>Day 56</strong></div></div>
-          <p>Eight weeks covers two payrolls and two rent dates — enough to see the next squeeze, without pretending to know next year.</p>
-        </div>
-        <div class="pass__stub"><div class="seat">SEAT<b>03F</b></div><svg class="bc" data-code="FIFTY-SIX" viewBox="0 0 80 56" preserveAspectRatio="none" aria-hidden="true"></svg><button class="tear" type="button" aria-label="Tear the stub of rule 03">Tear</button></div>
-      </article>
-      <article class="pass" data-reveal data-d="1">
-        <div class="pass__main">
-          <div class="pass__top"><span>Boarding pass</span><span>Rule 04</span></div>
-          <h3>Dates, not guesses</h3>
-          <div class="route"><div><small>From</small><strong>Due on the 5th</strong></div><svg aria-hidden="true"><use href="#i-dash"/></svg><div class="to"><small>To</small><strong>Paid on the 5th</strong></div></div>
-          <p>Bills land on business dates, not timestamps. Rent due on the 5th is due on the 5th — in Hà Nội, Sài Gòn or on a server abroad.</p>
-        </div>
-        <div class="pass__stub"><div class="seat">SEAT<b>04K</b></div><svg class="bc" data-code="BUSINESS-DATES" viewBox="0 0 80 56" preserveAspectRatio="none" aria-hidden="true"></svg><button class="tear" type="button" aria-label="Tear the stub of rule 04">Tear</button></div>
-      </article>
     </div>
   </div>
 </section>
@@ -1038,8 +965,7 @@ var Sound = (function () {
     },
     check: function () { tone(1046.5, 0.14, { type: 'triangle', gain: 0.11 }); tone(1568, 0.22, { gain: 0.07, at: 0.06 }); },
     page: function () { noise(0.07, { gain: 0.1, freq: 800 + Math.random() * 500, to: 2600, q: 0.8 }); },
-    uncheck: function () { tone(523, 0.12, { type: 'triangle', gain: 0.08 }); },
-    tear: function () { noise(0.3, { gain: 0.3, freq: 1200, to: 5200, q: 0.8 }); noise(0.12, { gain: 0.15, freq: 5000, q: 1, at: 0.2 }); }
+    uncheck: function () { tone(523, 0.12, { type: 'triangle', gain: 0.08 }); }
   };
 })();
 
@@ -1598,32 +1524,21 @@ var Board = (function () {
 /* ---------- svg helpers ---------- */
 var NS = 'http://www.w3.org/2000/svg';
 function el(tag, attrs, parent) { var n = document.createElementNS(NS, tag); for (var k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; }
-function polar(cx, cy, r, deg) { var a = (deg - 90) * Math.PI / 180; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; }
-function arc(cx, cy, r, a0, a1) { var p0 = polar(cx, cy, r, a0), p1 = polar(cx, cy, r, a1); return 'M' + p0[0].toFixed(2) + ' ' + p0[1].toFixed(2) + 'A' + r + ' ' + r + ' 0 ' + (a1 - a0 > 180 ? 1 : 0) + ' 1 ' + p1[0].toFixed(2) + ' ' + p1[1].toFixed(2); }
-function drawBarcode(svg, code, w, h) {
-  var r = rng(hashStr(code)), x = 2;
-  while (svg.firstChild) svg.removeChild(svg.firstChild);
-  while (x < w - 2) {
-    var bw = (0.6 + Math.floor(r() * 3) * 0.7) * (w / 80);
-    if (r() > 0.32) el('rect', { x: x.toFixed(2), y: 0, width: bw.toFixed(2), height: h, fill: 'currentColor' }, svg);
-    x += bw + (0.6 + r() * 0.9) * (w / 80);
-  }
-}
-
-/* ---------- 56-day calendar: tide grid + flip day block ---------- */
+/* ---------- 56-day calendar: week strips + flip day block ---------- */
 var Cal = (function () {
-  var table = $('#cal'), leaf = $('#leaf'), pad = $('#bloc-pad'), edge = $('#bloc-edge'), bloc = $('.bloc'), planner = $('#planner');
+  var grid = $('#cal'), leaf = $('#leaf'), pad = $('#bloc-pad'), edge = $('#bloc-edge'), bloc = $('.bloc'), planner = $('#planner');
   var pill = $('#cal-pill'), rmk = $('#cal-rmk');
   var sum = { low: $('#cs-low'), lowS: $('#cs-low-s'), run: $('#cs-run'), runS: $('#cs-run-s'), pay: $('#cs-pay') };
-  var N = 56, VMAX = 140e6;
+  var N = 56, HI = 110e6, LO = -10e6, sFrom = null, sTo = null;
   var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   var WDF = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   var WDV = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
   var TAG = { payroll: 'Payroll', rent: 'Rent', restock: 'Restock', payout: 'Payout', sales: 'Sales' };
-  var RING = 'M41 6C29 1 9 4 4 16c-4 11 9 19 26 18 16-1 27-9 25-19-2-8-13-12-26-11';
-  var cells = [], nums = {}, sel = -1, pinned = false, visible = false, wet = reduce, flips = [], timers = [], swing = false, fresh = false;
-
-  table.style.setProperty('--rs', (RESERVE / VMAX).toFixed(4));
+  var RING = 'M45 9C35 1 12 3 6 18c-5 14 6 26 23 26 17 0 28-10 27-24-1-10-12-17-25-16';
+  var wide = window.matchMedia ? window.matchMedia('(min-width:1020px)') : { matches: true };
+  var cells = [], rows = [], nums = {}, sel = -1, manual = false, inZone = false, visible = false;
+  var flips = [], timers = [], swayAt = 0, swing = false, fresh = false, zf = 0, sndAt = 0;
+  var shown = null, from = null, to = null, tweenT = -1, rev = reduce ? N : 0, revTo = rev, scrollDirty = true;
 
   function h(tag, cls, parent, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; if (parent) parent.appendChild(n); return n; }
   function weekend(d) { var w = dateOf(d).getDay(); return w === 0 || w === 6; }
@@ -1631,37 +1546,77 @@ var Cal = (function () {
   function stat(v) { return v < 0 ? 'short' : (v < RESERVE ? 'tight' : 'clear'); }
   function signed(v) { return (v < 0 ? MINUS : '+') + fmtVND(Math.abs(v)); }
   function net(ev) { var s = 0; ev.forEach(function (e) { s += e.amount; }); return s; }
+  function yOf(v) { return (HI - clamp(v, LO, HI)) / (HI - LO) * 100; }
+  function target(f) { return f.firstShort >= 0 ? f.firstShort : f.minDay; }
 
-  // 8 rows of 7; the columns start on today's weekday, a thick rule steps around each new month
-  var thead = h('thead', null, table), hr = h('tr', null, thead), tbody = h('tbody', null, table), r, c, d;
-  h('span', 'sr-only', h('th', 'rh', hr), 'Week').parentNode.setAttribute('scope', 'col');
-  for (c = 0; c < 7; c++) h('th', weekend(c) ? 'we' : '', hr, WD[dateOf(c).getDay()]).setAttribute('scope', 'col');
+  // 8 week rows; columns start on today's weekday; a heavy rule steps around each new month.
+  // Each row carries one strip of the forecast line, so the 56 days read as a single path.
+  var Y0 = yOf(0), YR = yOf(RESERVE), stops = [], refs = [], r, c, d;
+  var hd = h('div', 'cal__row cal__hd', grid); hd.setAttribute('role', 'row');
+  h('span', 'sr-only', h('span', 'rh', hd), 'Week').parentNode.setAttribute('role', 'columnheader');
+  for (c = 0; c < 7; c++) h('span', weekend(c) ? 'we' : '', hd, WD[dateOf(c).getDay()]).setAttribute('role', 'columnheader');
   for (r = 0; r < 8; r++) {
-    var tr = h('tr', null, tbody), rh = h('th', null, tr);
-    rh.setAttribute('scope', 'row'); rh.setAttribute('aria-label', 'Week ' + (r + 1)); h('span', null, rh, 'W' + (r + 1));
+    var wk = h('div', 'cal__row cal__wk', grid), rh = h('span', 'rh', wk);
+    wk.setAttribute('role', 'row'); rh.setAttribute('role', 'rowheader'); rh.setAttribute('aria-label', 'Week ' + (r + 1)); h('span', null, rh, 'W' + (r + 1));
     for (c = 0; c < 7; c++) {
       d = r * 7 + c;
-      var td = h('td', [weekend(d) ? 'we' : '', d >= 7 && month(d) !== month(d - 7) ? 'mt' : '', c > 0 && month(d) !== month(d - 1) ? 'ml' : ''].join(' ').trim(), tr);
-      td.setAttribute('data-d', d); td.setAttribute('aria-selected', 'false'); td.tabIndex = -1;
-      td.style.setProperty('--i', d);
-      if (d === 0) td.setAttribute('aria-current', 'date');
-      var cell = { td: td, lvl: h('i', 'lvl', td), wl: h('i', 'wl', td) };
-      var dn = h('span', 'dn', td);
-      h('b', null, dn, String(dateOf(d).getDate()));
+      var day = h('div', ['day', weekend(d) ? 'we' : '', d >= 7 && month(d) !== month(d - 7) ? 'mt' : '', c > 0 && month(d) !== month(d - 1) ? 'ml' : ''].join(' ').trim(), wk);
+      day.setAttribute('role', 'gridcell'); day.setAttribute('data-d', d); day.setAttribute('aria-selected', 'false'); day.tabIndex = -1;
+      if (d === 0) day.setAttribute('aria-current', 'date');
+      var dn = h('span', 'dn', day), b = h('b', null, dn, String(dateOf(d).getDate()));
+      el('path', { d: RING, pathLength: 1 }, el('svg', { 'class': 'ring', viewBox: '0 0 60 48', 'aria-hidden': 'true' }, b));
       if (d === 0 || dateOf(d).getDate() === 1) h('span', 'mo', dn, MO[month(d)]);
-      el('path', { d: RING, pathLength: 1 }, el('svg', { 'class': 'ring', viewBox: '0 0 60 40', 'aria-hidden': 'true' }, dn));
-      cell.fl = h('span', 'fl', td); cell.tg = h('span', 'tg', td); cell.dot = h('i', 'dot', td); cell.bv = h('span', 'bv', cell.wl);
-      h('i', 'fr', td);
+      var cell = { el: day, fl: h('span', 'fl', day), ev: h('span', 'ev', day), dot: h('i', 'dot', day) };
+      cell.pt = h('span', 'pt', day); cell.pv = h('span', 'pv', cell.pt);
       cells.push(cell);
     }
+    var svg = el('svg', { 'class': 'spark', viewBox: '0 0 700 100', preserveAspectRatio: 'none', 'aria-hidden': 'true', focusable: 'false' }, wk);
+    if (r === 0) {
+      var defs = el('defs', {}, svg), gi = el('linearGradient', { id: 'cal-ink', gradientUnits: 'userSpaceOnUse', x1: 0, y1: 0, x2: 0, y2: 100 }, defs);
+      [[0, '#1F5FA8'], [1, '#1F5FA8'], [1, '#B86E0A'], [2, '#B86E0A'], [2, '#C3322B'], [3, '#C3322B']].forEach(function (s) { stops.push([el('stop', { 'stop-color': s[1] }, gi), s[0]]); });
+      var ga = el('linearGradient', { id: 'cal-fill', gradientUnits: 'userSpaceOnUse', x1: 0, y1: 0, x2: 0, y2: 100 }, defs);
+      [[0, '#1F5FA8', 0.3], [2, '#1F5FA8', 0.03], [2, '#C3322B', 0.1], [3, '#C3322B', 0.38]].forEach(function (s) { stops.push([el('stop', { 'stop-color': s[1], 'stop-opacity': s[2] }, ga), s[0]]); });
+    }
+    var clip = el('rect', { x: 0, y: -20, width: 0, height: 140 }, el('clipPath', { id: 'cal-clip-' + r }, svg));
+    refs.push([el('line', { 'class': 'sp-res', x1: 0, x2: 700 }, svg), RESERVE], [el('line', { 'class': 'sp-zero', x1: 0, x2: 700 }, svg), 0]);
+    var g = el('g', { 'clip-path': 'url(#cal-clip-' + r + ')' }, svg);
+    rows.push({ el: wk, clip: clip, area: el('path', { 'class': 'sp-area' }, g), line: el('path', { 'class': 'sp-line' }, g) });
+  }
+
+  // strips: a cardinal curve through each day's close; the ends borrow from the neighbouring week
+  function rowPath(v, r) {
+    var a = r * 7, z = a + 6, p = [[0, yOf(a > 0 ? (v[a - 1] + v[a]) / 2 : v[a])]], i, s;
+    for (i = 0; i < 7; i++) p.push([50 + 100 * i, yOf(v[a + i])]);
+    p.push([700, yOf(z < N - 1 ? (v[z] + v[z + 1]) / 2 : v[z])]);
+    s = 'M0 ' + p[0][1].toFixed(2);
+    for (i = 0; i < p.length - 1; i++) {
+      var p0 = p[i - 1] || p[i], p1 = p[i], p2 = p[i + 1], p3 = p[i + 2] || p2;
+      s += 'C' + (p1[0] + (p2[0] - p0[0]) / 6).toFixed(1) + ' ' + (p1[1] + (p2[1] - p0[1]) / 6).toFixed(2) + ' ' +
+        (p2[0] - (p3[0] - p1[0]) / 6).toFixed(1) + ' ' + (p2[1] - (p3[1] - p1[1]) / 6).toFixed(2) + ' ' + p2[0] + ' ' + p2[1].toFixed(2);
+    }
+    return s;
+  }
+  function draw() {
+    Y0 = yOf(0); YR = yOf(RESERVE);
+    var at = [0, YR, Y0, 100];
+    stops.forEach(function (s) { s[0].setAttribute('offset', (clamp(at[s[1]], 0, 100) / 100).toFixed(4)); });
+    refs.forEach(function (l) { var y = yOf(l[1]).toFixed(2); l[0].setAttribute('y1', y); l[0].setAttribute('y2', y); });
+    rows.forEach(function (row, i) { var s = rowPath(shown, i); row.line.setAttribute('d', s); row.area.setAttribute('d', s + 'L700 ' + Y0.toFixed(2) + 'L0 ' + Y0.toFixed(2) + 'Z'); });
+    cells.forEach(function (cell, i) { cell.el.style.setProperty('--y', (yOf(shown[i]) / 100).toFixed(4)); });
+  }
+  function drawReveal() { rows.forEach(function (row, i) { row.clip.setAttribute('width', (clamp(rev - i * 7, 0, 7) * 100).toFixed(1)); }); }
+  // the strip scale fits the scenario: zero and the reserve stay in view, the swings fill the band
+  function scaleOf(f) {
+    var lo = Math.min(f.min, 0), hi = Math.max(f.max, RESERVE * 3), pad = (hi - lo) * 0.1;
+    return [hi + pad, lo - pad * 0.5];
+  }
+  function setVals(f) {
+    to = f.bal.slice(0, N); sTo = scaleOf(f);
+    if (!shown || reduce || !visible) { shown = to.slice(); HI = sTo[0]; LO = sTo[1]; tweenT = -1; draw(); return; }
+    from = shown.slice(); sFrom = [HI, LO]; tweenT = 0;
   }
 
   function big(ev) { var b = null; ev.forEach(function (e) { if (Math.abs(e.amount) >= 10e6 && (!b || Math.abs(e.amount) > Math.abs(b.amount))) b = e; }); return b; }
-  function level(cell, v) {
-    var up = wet ? clamp(v / VMAX, 0, 1) : 0;
-    cell.lvl.style.transform = 'scaleY(' + up.toFixed(4) + ')';
-    cell.wl.style.transform = 'translateY(' + ((1 - up) * 100).toFixed(2) + '%)';
-  }
   function cellLabel(f, d) {
     var x = dateOf(d), v = f.bal[d], parts = [WDF[x.getDay()] + ' ' + x.getDate() + ' ' + MONTHS[x.getMonth()] + (d === 0 ? ', today' : '')];
     parts.push('closes at ' + fmtM(v) + (v < 0 ? ', below zero' : (v < RESERVE ? ', under the reserve' : '')));
@@ -1671,17 +1626,16 @@ var Cal = (function () {
   }
   function paint(f) {
     cells.forEach(function (cell, d) {
-      var v = f.bal[d], b = big(f.byDay[d]), td = cell.td;
-      td.classList.toggle('tight', stat(v) === 'tight'); td.classList.toggle('neg', v < 0);
-      td.classList.toggle('hi', v / VMAX > 0.8);
-      td.classList.toggle('lo', d === f.minDay && d !== f.firstShort); td.classList.toggle('sh', d === f.firstShort);
-      level(cell, v);
-      cell.bv.textContent = (v < 0 ? MINUS : '') + (Math.abs(v) / 1e6).toFixed(1);
-      cell.fl.textContent = d === f.firstShort ? 'Short' : (d === f.minDay ? 'Low' : (d === 0 ? 'Today' : ''));
-      cell.tg.textContent = ''; cell.tg.className = 'tg' + (b && b.amount > 0 ? ' in' : '');
-      if (b) cell.tg.textContent = b.kind === 'supplier' ? b.label.split(' ')[0] : TAG[b.kind] || b.label;
+      var v = f.bal[d], b = big(f.byDay[d]), n = cell.el;
+      n.classList.toggle('neg', v < 0);
+      n.classList.toggle('lo', d === f.minDay && d !== f.firstShort); n.classList.toggle('sh', d === f.firstShort);
+      cell.fl.textContent = d === f.firstShort ? 'Short' : (d === f.minDay ? 'Low' : '');
+      n.classList.toggle('flagged', !!cell.fl.textContent);
+      cell.ev.className = 'ev' + (b && b.amount > 0 ? ' in' : '');
+      cell.ev.textContent = b ? (b.kind === 'supplier' ? b.label.split(' ')[0] : TAG[b.kind] || b.label) + ' ' + (b.amount < 0 ? MINUS : '+') + (Math.abs(b.amount) / 1e6).toFixed(1) : '';
       cell.dot.className = 'dot' + (b ? (b.amount > 0 ? ' in' : '') : ' no');
-      td.setAttribute('aria-label', cellLabel(f, d));
+      cell.pv.textContent = fmtM(v);
+      n.setAttribute('aria-label', cellLabel(f, d));
     });
   }
 
@@ -1752,14 +1706,24 @@ var Cal = (function () {
     h('p', 'leaf__note', node, note(f, d));
   }
   function clearFlips() {
-    flips.forEach(function (n) { if (n.parentNode) n.parentNode.removeChild(n); }); flips = [];
+    flips.forEach(function (n) { if (n.parentNode) n.parentNode.removeChild(n); }); flips = []; zf = 0;
     timers.forEach(clearTimeout); timers = [];
+  }
+  function drop(n) {
+    var i = flips.indexOf(n); if (i >= 0) flips.splice(i, 1);
+    if (n.parentNode) n.parentNode.removeChild(n);
+    if (!flips.length) zf = 0;
   }
   function page(cls, d, z) {
     var n = h('div', 'leaf flip' + cls, pad); n.setAttribute('aria-hidden', 'true'); n.style.zIndex = z;
     fillLeaf(n, state.f, d); flips.push(n); return n;
   }
-  // forward: the pages on top lift away; backward: the pages fall back on, the target last
+  function rustle() { var t = performance.now(); if (t - sndAt > 55) { sndAt = t; Sound.page(); } }
+  function sway() {
+    var t = performance.now(); if (t - swayAt < 1000) return; swayAt = t;
+    swing = !swing; bloc.classList.remove('sway', 'sway2'); bloc.classList.add(swing ? 'sway' : 'sway2');
+  }
+  // a jump: the pages on top lift away, or fall back on with the target last
   function riffle(a, b) {
     clearFlips();
     var fwd = b > a, list = [], i;
@@ -1771,24 +1735,67 @@ var Cal = (function () {
       timers.push(setTimeout(Sound.page, k * stag + (fwd ? 40 : 260)));
     });
     timers.push(setTimeout(clearFlips, (n - 1) * stag + (fwd ? 500 : 440) + 40));
-    swing = !swing; bloc.classList.remove('sway', 'sway2'); bloc.classList.add(swing ? 'sway' : 'sway2');
+    sway();
   }
-  function select(d, animate) {
-    var prev = sel; sel = d;
-    cells.forEach(function (cell, i) { cell.td.setAttribute('aria-selected', String(i === d)); cell.td.tabIndex = i === d ? 0 : -1; });
+  // a scroll step: one page per step, each left to finish on its own
+  function flipOne(a, b) {
+    var fwd = b > a, n = page(fwd ? ' up' : ' down', fwd ? a : b, fwd ? 500 - zf : 500 + zf);
+    zf++;
+    n.addEventListener('animationend', function () { drop(n); });
+    while (flips.length > 6) drop(flips[0]);
+    rustle(); sway();
+  }
+  function mark(d) {
+    sel = d;
+    cells.forEach(function (cell, i) { cell.el.setAttribute('aria-selected', String(i === d)); cell.el.tabIndex = i === d ? 0 : -1; });
     edge.style.transform = 'scaleY(' + ((N - d) / N).toFixed(3) + ')';
-    if (animate && prev >= 0 && prev !== d && visible && !reduce) riffle(prev, d);
     fillLeaf(leaf, state.f, d);
   }
+  function select(d, animate) {
+    var prev = sel; mark(d);
+    if (animate && prev >= 0 && prev !== d && visible && !reduce) riffle(prev, d);
+  }
+  function step(d) {
+    var prev = sel; mark(d);
+    if (prev >= 0 && prev !== d && visible && !reduce) flipOne(prev, d);
+  }
 
-  table.addEventListener('click', function (e) {
-    var td = e.target.closest ? e.target.closest('td[data-d]') : null;
-    if (!td) return;
-    pinned = true;
-    var d = Number(td.getAttribute('data-d'));
+  // scrolling turns the pages: on wide screens the block follows the week at eye level,
+  // on narrow ones it riffles from today to the day that matters as it rises into view
+  function cursor() {
+    if (wide.matches) {
+      var ref = window.innerHeight * 0.48, last = rows[7].el.getBoundingClientRect();
+      if (ref >= last.bottom) revTo = N;
+      for (var i = 0; i < 8; i++) {
+        var rc = rows[i].el.getBoundingClientRect();
+        if (ref >= rc.top && ref < rc.bottom) return i * 7 + clamp(Math.floor((ref - rc.top) / rc.height * 7), 0, 6);
+      }
+      return -1;
+    }
+    var b = bloc.getBoundingClientRect(), vh = window.innerHeight;
+    if (b.bottom < 0 || b.top > vh) return -1;
+    return Math.round(clamp((vh - b.top) / (vh * 0.75), 0, 1) * target(state.f));
+  }
+  function onScroll() {
+    scrollDirty = false;
+    if (!state.f) return;
+    var k = cursor();
+    if (k < 0) { inZone = false; manual = false; return; }
+    inZone = true;
+    if (wide.matches) revTo = Math.max(revTo, k + 1);
+    if (!manual && k !== sel) step(k);
+  }
+  window.addEventListener('scroll', function () { scrollDirty = true; }, { passive: true });
+  window.addEventListener('resize', function () { scrollDirty = true; });
+
+  grid.addEventListener('click', function (e) {
+    var n = e.target.closest ? e.target.closest('.day') : null;
+    if (!n) return;
+    manual = true;
+    var d = Number(n.getAttribute('data-d'));
     if (d !== sel) select(d, true);
   });
-  table.addEventListener('keydown', function (e) {
+  grid.addEventListener('keydown', function (e) {
     var d = sel, k = e.key;
     if (k === 'ArrowRight') d += 1; else if (k === 'ArrowLeft') d -= 1;
     else if (k === 'ArrowDown') d += 7; else if (k === 'ArrowUp') d -= 7;
@@ -1798,18 +1805,30 @@ var Cal = (function () {
     e.preventDefault();
     d = clamp(d, 0, N - 1);
     if (d === sel) return;
-    pinned = true; select(d, true); cells[d].td.focus();
+    manual = true; select(d, true); cells[d].el.focus();
   });
 
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(function (es) {
       visible = es[0].isIntersecting;
-      if (visible && !wet) { wet = true; if (state.f) paint(state.f); }
-    }, { threshold: 0.2 }).observe(planner);
-  } else { visible = true; wet = true; }
-  onReduceChange.push(function () { if (reduce) { clearFlips(); if (!wet) { wet = true; if (state.f) paint(state.f); } } });
+      if (visible && !wide.matches) revTo = N;
+    }, { threshold: 0 }).observe(planner);
+  } else { visible = true; rev = revTo = N; }
+  onReduceChange.push(function () { if (reduce) { clearFlips(); rev = revTo = N; drawReveal(); if (to) { shown = to.slice(); HI = sTo[0]; LO = sTo[1]; tweenT = -1; draw(); } } });
 
   function frame(dt) {
+    if (scrollDirty) onScroll();
+    if (tweenT >= 0) {
+      tweenT += dt;
+      for (var i = 0; i < N; i++) { var u = clamp((tweenT - i * 0.006) / 0.75, 0, 1); shown[i] = lerp(from[i], to[i], 1 - Math.pow(1 - u, 3)); }
+      var su = 1 - Math.pow(1 - clamp(tweenT / 0.9, 0, 1), 3); HI = lerp(sFrom[0], sTo[0], su); LO = lerp(sFrom[1], sTo[1], su);
+      draw();
+      if (tweenT > 0.006 * N + 0.75) tweenT = -1;
+    }
+    if (rev !== revTo) {
+      rev = reduce ? revTo : Math.min(revTo, rev + Math.max(dt * 10, (revTo - rev) * Math.min(1, dt * 6)));
+      drawReveal();
+    }
     for (var k in nums) {
       var t = nums[k];
       if (t.t >= 1) continue;
@@ -1826,13 +1845,14 @@ var Cal = (function () {
   subs.push(function (f) {
     chips.forEach(function (b) { b.setAttribute('aria-pressed', String(Number(b.getAttribute('data-r')) === f.R)); });
     split2.checked = f.split;
-    paint(f); summary(f);
-    // until someone picks a day, the block follows the day that matters most
-    var target = pinned ? sel : (f.firstShort >= 0 ? f.firstShort : f.minDay);
-    if (target !== sel) { select(target, true); return; }
+    paint(f); setVals(f); summary(f);
+    // until scrolling or a click takes over, the block rests on the day that matters most
+    var t = sel >= 0 && (inZone || manual) ? sel : target(f);
+    if (t !== sel) { select(t, true); return; }
     fillLeaf(leaf, f, sel);
     if (visible && !reduce) { fresh = !fresh; leaf.classList.remove('fresh', 'fresh2'); leaf.classList.add(fresh ? 'fresh' : 'fresh2'); }
   });
+  drawReveal();
   return { frame: frame };
 })();
 
@@ -1861,16 +1881,6 @@ var Cal = (function () {
   }
   refresh();
 })();
-
-/* ---------- boarding passes ---------- */
-$$('svg.bc[data-code]').forEach(function (svg) { drawBarcode(svg, svg.getAttribute('data-code'), 80, 56); });
-$$('.tear').forEach(function (b) {
-  b.addEventListener('click', function () {
-    var pass = b.closest('.pass'); if (!pass || pass.classList.contains('torn')) return;
-    pass.classList.add('torn'); Sound.tear();
-    setTimeout(function () { pass.classList.remove('torn'); }, reduce ? 600 : 1700);
-  });
-});
 
 /* ---------- fares: billing toggle, climb profile, fare selection ---------- */
 var Fares = (function () {

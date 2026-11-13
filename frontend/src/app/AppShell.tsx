@@ -1,5 +1,5 @@
 import { Suspense, lazy, useState } from 'react'
-import { CalendarRange, CircleAlert, Database, FileSpreadsheet, LineChart, LogOut, Split, Trash2 } from 'lucide-react'
+import { CalendarRange, BarChart3, CircleAlert, Database, FileSpreadsheet, LineChart, LogOut, Package, Split, Trash2 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { AppShell as AstryxAppShell } from '@astryxdesign/core/AppShell'
 import { Avatar } from '@astryxdesign/core/Avatar'
@@ -27,11 +27,16 @@ const ForecastScreen = lazy(() => import('@/screens/forecast/ForecastScreen').th
 const ScenariosScreen = lazy(() => import('@/screens/scenarios/ScenariosScreen').then((m) => ({ default: m.ScenariosScreen })))
 const ImportScreen = lazy(() => import('@/screens/import/ImportScreen').then((m) => ({ default: m.ImportScreen })))
 
+const InventoryScreen = lazy(() => import('@/screens/inventory/InventoryScreen').then((m) => ({ default: m.InventoryScreen })))
+const SalesScreen = lazy(() => import('@/screens/inventory/InventoryScreen').then((m) => ({ default: m.SalesScreen })))
+
 const ICONS: Record<Route, LucideIcon> = {
   lich: CalendarRange,
   'du-bao': LineChart,
   'kich-ban': Split,
   'nhap-file': FileSpreadsheet,
+  'kho-hang': Package,
+  'doanh-thu': BarChart3,
 }
 
 /** Account menu: who is signed in, the two whole-shop data actions (sample data, wipe), and sign-out. */
@@ -74,7 +79,7 @@ function AccountMenu({ email, wide }: { email: string; wide: boolean }) {
           label="Dùng ví dụ mẫu"
           onClick={() => (hasData ? setConfirm('demo') : void write((r) => r.replaceAll(demoShop(today))))}
         />
-        {hasData && <DropdownMenuItem icon={Trash2} label="Xóa hết dữ liệu" variant="destructive" onClick={() => setConfirm('wipe')} />}
+        {hasData && <DropdownMenuItem icon={Trash2} label="Xóa dữ liệu thu–chi" variant="destructive" onClick={() => setConfirm('wipe')} />}
         <DropdownMenuDivider />
         <DropdownMenuItem icon={LogOut} label="Đăng xuất" onClick={() => void signOut().catch(() => {})} />
       </DropdownMenu>
@@ -82,7 +87,7 @@ function AccountMenu({ email, wide }: { email: string; wide: boolean }) {
         open={confirm === 'demo'}
         onOpenChange={(open) => !open && setConfirm(null)}
         title="Dùng ví dụ mẫu?"
-        description="Thay toàn bộ dữ liệu hiện có bằng ví dụ mẫu."
+        description="Thay số dư, kịch bản và các khoản thu–chi nhập thủ công hoặc nhập từ file bằng dữ liệu mẫu."
         confirmLabel="Thay bằng ví dụ mẫu"
         tone="default"
         onConfirm={() => void write((r) => r.replaceAll(demoShop(today)))}
@@ -90,9 +95,9 @@ function AccountMenu({ email, wide }: { email: string; wide: boolean }) {
       <ConfirmDialog
         open={confirm === 'wipe'}
         onOpenChange={(open) => !open && setConfirm(null)}
-        title="Xóa hết dữ liệu?"
-        description="Số dư, lịch thu–chi, kịch bản và lịch sử nhập file của shop sẽ bị xóa."
-        confirmLabel="Xóa hết dữ liệu"
+        title="Xóa dữ liệu thu–chi?"
+        description="Xóa số dư, kịch bản, lịch sử nhập file và các khoản thu–chi không liên kết phiếu kho."
+        confirmLabel="Xóa dữ liệu thu–chi"
         onConfirm={() => void write((r) => r.replaceAll(emptyShop()))}
       />
     </>
@@ -199,6 +204,8 @@ export function AppShell({ route, email }: { route: Route; email: string }) {
               {route === 'du-bao' && <ForecastScreen />}
               {route === 'kich-ban' && <ScenariosScreen />}
               {route === 'nhap-file' && <ImportScreen />}
+              {route === 'kho-hang' && <InventoryScreen />}
+              {route === 'doanh-thu' && <SalesScreen />}
             </Suspense>
           </>
         )}

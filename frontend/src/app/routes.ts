@@ -1,10 +1,12 @@
-export type Route = 'lich' | 'du-bao' | 'kich-ban' | 'nhap-file'
+export type Route = 'lich' | 'du-bao' | 'kich-ban' | 'nhap-file' | 'kho-hang' | 'doanh-thu'
 
 export const ROUTES: { id: Route; label: string; short: string }[] = [
   { id: 'lich', label: 'Lịch thu–chi', short: 'Lịch' },
   { id: 'du-bao', label: 'Dự báo', short: 'Dự báo' },
   { id: 'kich-ban', label: 'Kịch bản', short: 'Kịch bản' },
   { id: 'nhap-file', label: 'Nhập từ file', short: 'Nhập file' },
+  { id: 'kho-hang', label: 'Kho hàng', short: 'Kho' },
+  { id: 'doanh-thu', label: 'Báo cáo doanh thu', short: 'Doanh thu' },
 ]
 
 export function readRoute(): Route {

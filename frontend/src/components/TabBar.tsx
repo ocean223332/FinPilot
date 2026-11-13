@@ -27,7 +27,7 @@ export function TabBar({ items, current, label, inline = false }: { items: TabIt
                 aria-current={active ? 'page' : undefined}
                 className={cn('relative flex h-full flex-col items-center justify-center gap-1 text-xs font-semibold', active ? 'text-primary' : 'text-secondary')}
               >
-                <span className={cn('grid h-7 w-14 place-items-center rounded-full', active && 'tab-bar-active')}>
+                <span className={cn('grid h-7 w-14 max-w-full place-items-center rounded-full', active && 'tab-bar-active')}>
                   <Icon aria-hidden="true" className="size-5" />
                 </span>
                 <span className="max-w-full truncate">{item.label}</span>

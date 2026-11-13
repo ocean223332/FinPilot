@@ -9,7 +9,7 @@ namespace FinPilot.Api.Controllers;
 [ApiController]
 [Authorize]
 [Route("api/shop")]
-public sealed class ShopController(ShopService service) : ControllerBase, IAsyncActionFilter
+public sealed partial class ShopController(ShopService service) : ControllerBase, IAsyncActionFilter
 {
     private string Owner => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
     [HttpGet] public Task<ShopResponse> Get(CancellationToken ct) => service.Read(Owner, ct);

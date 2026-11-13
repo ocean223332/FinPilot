@@ -51,6 +51,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
         });
 
         ConfigureShopRecords(builder);
+        InventoryModel.Configure(builder);
     }
 
     private static void ConfigureShopRecords(ModelBuilder builder)

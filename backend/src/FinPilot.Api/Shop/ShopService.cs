@@ -17,7 +17,7 @@ public sealed class ShopProblem(int status, string title, string type = "shop-er
     public object? Detail { get; } = detail;
 }
 
-public sealed class ShopService(AppDbContext db, IOptions<MvcJsonOptions> jsonOptions)
+public sealed partial class ShopService(AppDbContext db, IOptions<MvcJsonOptions> jsonOptions)
 {
     private JsonSerializerOptions Json => jsonOptions.Value.JsonSerializerOptions;
     private static ShopProblem Missing() => new(404, "Record not found.");
@@ -70,6 +70,7 @@ public sealed class ShopService(AppDbContext db, IOptions<MvcJsonOptions> jsonOp
         {
             Validate(input);
             if (id != input.Id) throw Invalid("The route and obligation ID must match.");
+            await CheckStockObligationEdit(shop.Id, input, ct);
             await UpsertObligation(shop, input, ct);
         }, ct);
 
@@ -78,6 +79,8 @@ public sealed class ShopService(AppDbContext db, IOptions<MvcJsonOptions> jsonOp
         {
             var row = await db.Obligations.SingleOrDefaultAsync(x => x.Id == id && x.ShopId == shop.Id && x.RemovedAt == null, ct)
                 ?? throw Missing();
+            if (await db.Set<StockDocument>().AnyAsync(x => x.ShopId == shop.Id && x.ObligationId == id, ct))
+                throw Invalid("Hãy hủy phiếu trong Kho hàng để xóa khoản thu–chi liên kết.");
             await RemoveObligation(shop, row, ct);
         }, ct);
 
@@ -137,7 +140,10 @@ public sealed class ShopService(AppDbContext db, IOptions<MvcJsonOptions> jsonOp
             if (input.Imports.Select(x => x.FileSha256).Distinct().Count() != input.Imports.Length)
                 throw Invalid("Import hashes must be unique.");
             // All changes, including intermediate SaveChanges, are inside the same transaction.
-            var ids = input.Obligations.Select(x => x.Id).ToArray();
+            var linkedIds = await db.Set<StockDocument>().Where(x => x.ShopId == shop.Id && x.ObligationId != null)
+                .Select(x => x.ObligationId!.Value).ToArrayAsync(ct);
+            if (input.Obligations.Any(x => linkedIds.Contains(x.Id))) throw Invalid("Không thể thay khoản thu–chi từ phiếu kho.");
+            var ids = input.Obligations.Select(x => x.Id).Concat(linkedIds).ToArray();
             foreach (var row in await db.Obligations.Where(x => x.ShopId == shop.Id && x.RemovedAt == null && !ids.Contains(x.Id)).ToListAsync(ct))
                 await RemoveObligation(shop, row, ct);
             var scenarioIds = input.Scenarios.Select(x => x.Id).ToArray();

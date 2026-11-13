@@ -56,6 +56,15 @@ npm run dev
 
 Vite proxy chuyển `/api` đến `http://localhost:5281`, giúp frontend gọi API cùng origin qua máy chủ phát triển.
 
+## Kho hàng và doanh thu
+
+- Mở **Kho hàng** để tạo sản phẩm với mã SKU, đơn vị và ngưỡng tồn thấp. Ghi **Nhập tồn đầu / tăng tồn** để đưa hàng có sẵn vào hệ thống.
+- **Nhập hàng** tăng tồn. **Xuất bán** giảm tồn và ghi nhận doanh thu theo ngày chứng từ. **Xuất khác / giảm tồn** dùng cho hao hụt hoặc xuất nội bộ. Số lượng là số nguyên theo đơn vị đã chọn.
+- Phiếu nhập hoặc xuất bán có thể tạo khoản dự kiến thu–chi nếu điền ngày thanh toán. Ghi nhận thanh toán thực tế ở **Lịch thu–chi**. Khi hủy phiếu, hệ thống hoàn lại số lượng và gỡ khoản thu–chi liên kết nếu chưa thanh toán.
+- **Báo cáo doanh thu** lọc theo khoảng ngày, tổng hợp doanh thu bán hàng, số phiếu bán, giá trị nhập hàng, doanh thu theo ngày và theo sản phẩm. Doanh thu ghi nhận theo phiếu bán còn hiệu lực, gồm cả phần chưa thu tiền. Giá trị nhập hàng là tổng phiếu nhập trong kỳ.
+
+Áp dụng migration bằng `dotnet ef database update --project backend/src/FinPilot.Api` trước khi chạy API với bản có kho hàng.
+
 ## API hiện có
 
 - `POST /api/forecast/preview`: nhận `ForecastInput`, trả `ForecastResult`; không yêu cầu đăng nhập và không truy cập database. Lỗi đầu vào trả `400 ValidationProblem`.

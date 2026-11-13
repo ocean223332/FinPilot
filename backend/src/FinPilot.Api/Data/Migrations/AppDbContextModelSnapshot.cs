@@ -331,8 +331,6 @@ namespace FinPilot.Api.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Id", "ShopId");
-
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("ImportBatchId", "ShopId");
@@ -350,6 +348,47 @@ namespace FinPilot.Api.Data.Migrations
                             t.HasCheckConstraint("ck_obligation_label", "length(btrim(label)) > 0");
 
                             t.HasCheckConstraint("ck_obligation_status", "status IN ('open','paid','cancelled')");
+                        });
+                });
+
+            modelBuilder.Entity("FinPilot.Api.Domain.Product", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("MinimumStock")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<Guid>("ShopId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Sku")
+                        .IsRequired()
+                        .HasMaxLength(48)
+                        .HasColumnType("character varying(48)");
+
+                    b.Property<long>("Stock")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShopId", "Sku")
+                        .IsUnique();
+
+                    b.ToTable("products", "finpilot", t =>
+                        {
+                            t.HasCheckConstraint("ck_products_stock", "\"Stock\" >= 0 AND \"MinimumStock\" >= 0");
                         });
                 });
 
@@ -491,6 +530,114 @@ namespace FinPilot.Api.Data.Migrations
                             t.HasCheckConstraint("ck_shops_data_version", "data_version >= 0");
 
                             t.HasCheckConstraint("ck_shops_name_not_blank", "length(btrim(name)) > 0");
+                        });
+                });
+
+            modelBuilder.Entity("FinPilot.Api.Domain.StockDocument", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Counterparty")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("character varying(12)");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<Guid?>("ObligationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly?>("PaymentDue")
+                        .HasColumnType("date");
+
+                    b.Property<Guid>("ShopId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ObligationId")
+                        .IsUnique();
+
+                    b.HasIndex("ObligationId", "ShopId");
+
+                    b.HasIndex("ShopId", "Date");
+
+                    b.ToTable("stock_documents", "finpilot", t =>
+                        {
+                            t.HasCheckConstraint("ck_stock_documents_due", "(\"PaymentDue\" IS NULL AND \"ObligationId\" IS NULL) OR (\"PaymentDue\" IS NOT NULL AND \"PaymentDue\" >= \"Date\" AND \"ObligationId\" IS NOT NULL AND \"Kind\" IN ('receipt', 'sale'))");
+
+                            t.HasCheckConstraint("ck_stock_documents_kind", "\"Kind\" IN ('receipt', 'sale', 'adjustment', 'stock-out')");
+                        });
+                });
+
+            modelBuilder.Entity("FinPilot.Api.Domain.StockLine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("DocumentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("ShopId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Sku")
+                        .IsRequired()
+                        .HasMaxLength(48)
+                        .HasColumnType("character varying(48)");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasPrecision(18)
+                        .HasColumnType("numeric(18,0)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocumentId", "ProductId")
+                        .IsUnique();
+
+                    b.HasIndex("DocumentId", "ShopId");
+
+                    b.HasIndex("ProductId", "ShopId");
+
+                    b.ToTable("stock_lines", "finpilot", t =>
+                        {
+                            t.HasCheckConstraint("ck_stock_lines_values", "\"Quantity\" > 0 AND \"UnitPrice\" >= 0 AND \"UnitPrice\" <> 'NaN'::numeric");
                         });
                 });
 
@@ -802,6 +949,15 @@ namespace FinPilot.Api.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("FinPilot.Api.Domain.Product", b =>
+                {
+                    b.HasOne("FinPilot.Api.Domain.Shop", null)
+                        .WithMany()
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FinPilot.Api.Domain.Scenario", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
@@ -830,6 +986,38 @@ namespace FinPilot.Api.Data.Migrations
                         .HasForeignKey("CurrentSnapshotId", "Id")
                         .HasPrincipalKey("Id", "ShopId")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("FinPilot.Api.Domain.StockDocument", b =>
+                {
+                    b.HasOne("FinPilot.Api.Domain.Shop", null)
+                        .WithMany()
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FinPilot.Api.Domain.Obligation", null)
+                        .WithMany()
+                        .HasForeignKey("ObligationId", "ShopId")
+                        .HasPrincipalKey("Id", "ShopId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("FinPilot.Api.Domain.StockLine", b =>
+                {
+                    b.HasOne("FinPilot.Api.Domain.StockDocument", null)
+                        .WithMany("Lines")
+                        .HasForeignKey("DocumentId", "ShopId")
+                        .HasPrincipalKey("Id", "ShopId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FinPilot.Api.Domain.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId", "ShopId")
+                        .HasPrincipalKey("Id", "ShopId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -881,6 +1069,11 @@ namespace FinPilot.Api.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("FinPilot.Api.Domain.StockDocument", b =>
+                {
+                    b.Navigation("Lines");
                 });
 #pragma warning restore 612, 618
         }
